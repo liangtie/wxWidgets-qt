@@ -12,6 +12,7 @@
 #include <QtGui/QPixmap>
 #include <QtGui/QBitmap>
 #include <QtWidgets/QLabel>
+#include <qnamespace.h>
 
 #ifndef WX_PRECOMP
     #include "wx/dc.h"
@@ -212,7 +213,7 @@ wxBitmap::wxBitmap(const wxString &filename, wxBitmapType type )
 
 void wxBitmap::InitFromImage(const wxImage& image, int depth, double WXUNUSED(scale) )
 {
-    Qt::ImageConversionFlags flags = 0;
+    Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor;
     if (depth == 1)
         flags = Qt::MonoOnly;
     m_refData = new wxBitmapRefData(QPixmap::fromImage(ConvertImage(image), flags));

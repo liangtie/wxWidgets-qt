@@ -33,9 +33,9 @@ public:
         wxQtSignalHandler< wxRadioBox >(handler ),
         QButtonGroup(parent)
     {
-        connect(this,
-                static_cast<void (QButtonGroup::*)(int index)>(&QButtonGroup::buttonClicked),
-                this, &wxQtButtonGroup::buttonClicked);
+        // connect(this,
+        //         static_cast<void (QButtonGroup::*)(int index)>(&QButtonGroup::buttonClicked),
+        //         this, &wxQtButtonGroup::buttonClicked);
     }
 private:
     void buttonClicked(int index);

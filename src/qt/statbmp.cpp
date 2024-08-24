@@ -64,9 +64,9 @@ void wxStaticBitmap::SetBitmap(const wxBitmapBundle& bitmap)
 
 wxBitmap wxStaticBitmap::GetBitmap() const
 {
-    const QPixmap* pix = m_qtLabel->pixmap();
-    if ( pix != NULL )
-        return wxBitmap( *pix );
+    auto  pix = m_qtLabel->pixmap();
+    if ( !pix.isNull() )
+        return wxBitmap( pix );
     else
         return wxBitmap();
 }

@@ -10,7 +10,7 @@
 
 #include <GL/gl.h>
 
-class QGLWidget;
+class QWidget;
 class QGLContext;
 class QGLFormat;
 

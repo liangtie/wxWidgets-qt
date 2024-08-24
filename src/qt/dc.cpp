@@ -383,7 +383,7 @@ void wxQtDCImpl::DoGetTextExtent(const wxString& string,
     {
         // note that boundingRect doesn't return "advance width" for spaces
         if (x != NULL)
-            *x = metrics.width( wxQtConvertString(string) );
+            *x = metrics.boundingRect( wxQtConvertString(string) ).width();
         if (y != NULL)
             *y = metrics.height();
     }

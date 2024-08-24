@@ -12,6 +12,7 @@
 #include "wx/qt/private/winevent.h"
 
 #include <QtWidgets/QListWidget>
+#include <qvariant.h>
 
 class wxQtListWidget : public wxQtEventSignalHandler< QListWidget, wxListBox >
 {
@@ -245,7 +246,7 @@ void wxListBox::DoSetSelection(int n, bool select)
         return;
     }
 
-    m_qtListWidget->setItemSelected( m_qtListWidget->item(n), select);
+    // m_qtListWidget->setItemSelected( m_qtListWidget->item(n), select);
 }
 
 int wxListBox::DoInsertItems(const wxArrayStringsAdapter & items,
@@ -275,7 +276,7 @@ int wxListBox::DoInsertOneItem(const wxString& text, unsigned int pos)
 void wxListBox::DoSetItemClientData(unsigned int n, void *clientData)
 {
     QListWidgetItem* item = m_qtListWidget->item(n);
-    QVariant variant = qVariantFromValue(clientData);
+    QVariant variant = QVariant::fromValue(clientData);
     item->setData(Qt::UserRole, variant);
 }
 
@@ -316,6 +317,6 @@ void wxListBox::UnSelectAll()
 {
     Q_FOREACH(QListWidgetItem* l, m_qtListWidget->selectedItems())
     {
-        m_qtListWidget->setItemSelected( l, false );
+       l->setSelected(false);
     }
 }

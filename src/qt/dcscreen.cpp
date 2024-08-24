@@ -11,7 +11,7 @@
 #include "wx/dcscreen.h"
 #include "wx/qt/dcscreen.h"
 
-#include <QtWidgets/QDesktopWidget>
+
 #include <QtGui/QScreen>
 #include <QtWidgets/QApplication>
 #include <QtGui/QPixmap>
@@ -37,6 +37,6 @@ void wxScreenDCImpl::DoGetSize(int *width, int *height) const
 QPixmap *wxScreenDCImpl::GetQPixmap()
 {
     if ( !m_qtPixmap )
-        m_qtPixmap = new QPixmap(QApplication::primaryScreen()->grabWindow(QApplication::desktop()->winId()));
+        m_qtPixmap = new QPixmap(QApplication::primaryScreen()->grabWindow((WId) QApplication::primaryScreen()->handle()));
     return m_qtPixmap;
 }

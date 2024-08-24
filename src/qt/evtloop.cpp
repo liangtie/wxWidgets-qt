@@ -127,7 +127,7 @@ int wxQtEventLoopBase::DoRun()
 bool wxQtEventLoopBase::Pending() const
 {
     QAbstractEventDispatcher *instance = QAbstractEventDispatcher::instance();
-    return instance->hasPendingEvents();
+    return false;
 }
 
 bool wxQtEventLoopBase::Dispatch()

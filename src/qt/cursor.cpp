@@ -11,6 +11,7 @@
 
 #include <QtWidgets/QApplication>
 #include <QtGui/QBitmap>
+#include <qcursor.h>
 
 #ifndef WX_PRECOMP
     #include "wx/bitmap.h"
@@ -109,7 +110,7 @@ void wxCursor::InitFromStock( wxStockCursor cursorId )
     {
     case wxCURSOR_BLANK:
     {
-        GetHandle() = QBitmap();
+        GetHandle() = QCursor() ;
         return;
     }
 //    case wxCURSOR_ARROW:

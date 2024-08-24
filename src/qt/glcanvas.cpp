@@ -6,13 +6,14 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "wx/wxprec.h"
+#include <qwidget.h>
 
 #if wxUSE_GLCANVAS
 
 #include "wx/qt/private/winevent.h"
 #include "wx/glcanvas.h"
 
-#include <QtOpenGL/QGLWidget>
+// #include <QtOpenGL/QWidget>
 #include <QtWidgets/QGestureRecognizer>
 #include <QtWidgets/QGestureEvent>
 
@@ -23,44 +24,44 @@
 #endif
 wxGCC_WARNING_SUPPRESS(unused-parameter)
 
-class wxQtGLWidget : public wxQtEventSignalHandler< QGLWidget, wxGLCanvas >
+class wxQtGLWidget : public wxQtEventSignalHandler< QWidget, wxGLCanvas >
 {
 public:
-    wxQtGLWidget(wxWindow *parent, wxGLCanvas *handler, QGLFormat format)
-        : wxQtEventSignalHandler<QGLWidget,wxGLCanvas>(parent, handler)
+    wxQtGLWidget(wxWindow *parent, wxGLCanvas *handler)
+        : wxQtEventSignalHandler<QWidget,wxGLCanvas>(parent, handler)
         {
-            setFormat(format);
-            setAutoBufferSwap( false );
+            // setFormat(format);
+            // setAutoBufferSwap( false );
         }
 
 protected:
-    virtual void showEvent ( QShowEvent * event ) wxOVERRIDE;
-    virtual void hideEvent ( QHideEvent * event ) wxOVERRIDE;
-    virtual void resizeEvent ( QResizeEvent * event ) wxOVERRIDE;
-    virtual void paintEvent ( QPaintEvent * event ) wxOVERRIDE;
+    virtual void showEvent ( QShowEvent * event ) ;
+    virtual void hideEvent ( QHideEvent * event ) ;
+    virtual void resizeEvent ( QResizeEvent * event ) ;
+    virtual void paintEvent ( QPaintEvent * event ) ;
 
-    virtual void resizeGL(int w, int h) wxOVERRIDE;
-    virtual void paintGL() wxOVERRIDE;
+    virtual void resizeGL(int w, int h) ;
+    virtual void paintGL() ;
 };
 
 void wxQtGLWidget::showEvent ( QShowEvent * event )
 {
-    QGLWidget::showEvent( event );
+    QWidget::showEvent( event );
 }
 
 void wxQtGLWidget::hideEvent ( QHideEvent * event )
 {
-    QGLWidget::hideEvent( event );
+    QWidget::hideEvent( event );
 }
 
 void wxQtGLWidget::resizeEvent ( QResizeEvent * event )
 {
-    QGLWidget::resizeEvent(event);
+    QWidget::resizeEvent(event);
 }
 
 void wxQtGLWidget::paintEvent ( QPaintEvent * event )
 {
-    QGLWidget::paintEvent(event);
+    QWidget::paintEvent(event);
 }
 
 void wxQtGLWidget::resizeGL(int w, int h)
@@ -344,7 +345,7 @@ wxGLContext::wxGLContext(wxGLCanvas *WXUNUSED(win), const wxGLContext* WXUNUSED(
 
 bool wxGLContext::SetCurrent(const wxGLCanvas&) const
 {
-// I think I must destroy and recreate the QGLWidget to change the context?
+// I think I must destroy and recreate the QWidget to change the context?
 //    win->GetHandle()->makeCurrent();
     return false;
 }
@@ -430,27 +431,28 @@ bool wxGLCanvas::Create(wxWindow *parent,
                         const int *attribList,
                         const wxPalette& palette)
 {
-#if wxUSE_PALETTE
-    wxASSERT_MSG( !palette.IsOk(), wxT("palettes not supported") );
-#endif // wxUSE_PALETTE
-    wxUnusedVar(palette); // Unused when wxDEBUG_LEVEL==0
+    return false;
+// #if wxUSE_PALETTE
+//     wxASSERT_MSG( !palette.IsOk(), wxT("palettes not supported") );
+// #endif // wxUSE_PALETTE
+//     wxUnusedVar(palette); // Unused when wxDEBUG_LEVEL==0
 
-    QGLFormat format;
-    if (!wxGLCanvas::ConvertWXAttrsToQtGL(attribList, format))
-        return false;
+//     // QGLFormat format;
+//     // if (!wxGLCanvas::ConvertWXAttrsToQtGL(attribList, format))
+//     //     return false;
 
-    m_qtWindow = new wxQtGLWidget(parent, this, format);
+//     m_qtWindow = new wxQtGLWidget(parent, this);
 
-    // Create and register a custom pan recognizer, available to all instances of this class.
-    QGestureRecognizer* pPanRecognizer = new PanGestureRecognizer();
-    QGestureRecognizer::registerRecognizer(pPanRecognizer);
+//     // Create and register a custom pan recognizer, available to all instances of this class.
+//     QGestureRecognizer* pPanRecognizer = new PanGestureRecognizer();
+//     QGestureRecognizer::registerRecognizer(pPanRecognizer);
 
-    return wxWindow::Create( parent, id, pos, size, style, name );
+//     return wxWindow::Create( parent, id, pos, size, style, name );
 }
 
 bool wxGLCanvas::SwapBuffers()
 {
-    static_cast<QGLWidget *>(m_qtWindow)->swapBuffers();
+    // static_cast<QWidget *>(m_qtWindow)->swapBuffers();
     return true;
 }
 
@@ -461,10 +463,10 @@ bool wxGLCanvas::ConvertWXAttrsToQtGL(const int *wxattrs, QGLFormat &format)
         return true;
 
     // set default parameters to false
-    format.setDoubleBuffer(false);
-    format.setDepth(false);
-    format.setAlpha(false);
-    format.setStencil(false);
+    // format.setDoubleBuffer(false);
+    // format.setDepth(false);
+    // format.setAlpha(false);
+    // format.setStencil(false);
 
     for ( int arg = 0; wxattrs[arg] != 0; arg++ )
     {
@@ -474,81 +476,81 @@ bool wxGLCanvas::ConvertWXAttrsToQtGL(const int *wxattrs, QGLFormat &format)
         int v = wxattrs[arg+1];
         switch ( wxattrs[arg] )
         {
-            case WX_GL_BUFFER_SIZE:
-                format.setRgba(false);
-                // I do not know how to set the buffer size, so fail
-                return false;
+            // case WX_GL_BUFFER_SIZE:
+            //     format.setRgba(false);
+            //     // I do not know how to set the buffer size, so fail
+            //     return false;
 
-            case WX_GL_LEVEL:
-                format.setPlane(v);
-                break;
+            // case WX_GL_LEVEL:
+            //     format.setPlane(v);
+            //     break;
 
-            case WX_GL_RGBA:
-                format.setRgba(true);
-                isBoolAttr = true;
-                break;
+            // case WX_GL_RGBA:
+            //     format.setRgba(true);
+            //     isBoolAttr = true;
+            //     break;
 
-            case WX_GL_DOUBLEBUFFER:
-                format.setDoubleBuffer(true);
-                isBoolAttr = true;
-                break;
+            // case WX_GL_DOUBLEBUFFER:
+            //     format.setDoubleBuffer(true);
+            //     isBoolAttr = true;
+            //     break;
 
-            case WX_GL_STEREO:
-                format.setStereo(true);
-                isBoolAttr = true;
-                break;
+            // case WX_GL_STEREO:
+            //     format.setStereo(true);
+            //     isBoolAttr = true;
+            //     break;
 
-            case WX_GL_AUX_BUFFERS:
-                // don't know how to implement
-                return false;
+            // case WX_GL_AUX_BUFFERS:
+            //     // don't know how to implement
+            //     return false;
 
-            case WX_GL_MIN_RED:
-                format.setRedBufferSize(v*8);
-                break;
+            // case WX_GL_MIN_RED:
+            //     format.setRedBufferSize(v*8);
+            //     break;
 
-            case WX_GL_MIN_GREEN:
-                format.setGreenBufferSize(v);
-                break;
+            // case WX_GL_MIN_GREEN:
+            //     format.setGreenBufferSize(v);
+            //     break;
 
-            case WX_GL_MIN_BLUE:
-                format.setBlueBufferSize(v);
-                break;
+            // case WX_GL_MIN_BLUE:
+            //     format.setBlueBufferSize(v);
+            //     break;
 
-            case WX_GL_MIN_ALPHA:
-                format.setAlpha(true);
-                format.setAlphaBufferSize(v);
-                break;
+            // case WX_GL_MIN_ALPHA:
+            //     format.setAlpha(true);
+            //     format.setAlphaBufferSize(v);
+            //     break;
 
-            case WX_GL_DEPTH_SIZE:
-                format.setDepth(true);
-                format.setDepthBufferSize(v);
-                break;
+            // case WX_GL_DEPTH_SIZE:
+            //     format.setDepth(true);
+            //     format.setDepthBufferSize(v);
+            //     break;
 
-            case WX_GL_STENCIL_SIZE:
-                format.setStencil(true);
-                format.setStencilBufferSize(v);
-                break;
+            // case WX_GL_STENCIL_SIZE:
+            //     format.setStencil(true);
+            //     format.setStencilBufferSize(v);
+            //     break;
 
-            case WX_GL_MIN_ACCUM_RED:
-            case WX_GL_MIN_ACCUM_GREEN:
-            case WX_GL_MIN_ACCUM_BLUE:
-            case WX_GL_MIN_ACCUM_ALPHA:
-                format.setAccumBufferSize(v);
-                break;
+            // case WX_GL_MIN_ACCUM_RED:
+            // case WX_GL_MIN_ACCUM_GREEN:
+            // case WX_GL_MIN_ACCUM_BLUE:
+            // case WX_GL_MIN_ACCUM_ALPHA:
+            //     format.setAccumBufferSize(v);
+            //     break;
 
-            case WX_GL_SAMPLE_BUFFERS:
-                format.setSampleBuffers(v);
-                // can we somehow indicate if it's not supported?
-                break;
+            // case WX_GL_SAMPLE_BUFFERS:
+            //     format.setSampleBuffers(v);
+            //     // can we somehow indicate if it's not supported?
+            //     break;
 
-            case WX_GL_SAMPLES:
-                format.setSamples(v);
-                // can we somehow indicate if it's not supported?
-                break;
+            // case WX_GL_SAMPLES:
+            //     format.setSamples(v);
+            //     // can we somehow indicate if it's not supported?
+            //     break;
 
-            case WX_GL_MAJOR_VERSION:
-                 format.setVersion ( v,0 );
-                 break;
+            // case WX_GL_MAJOR_VERSION:
+            //      format.setVersion ( v,0 );
+            //      break;
 
             default:
                 wxLogDebug(wxT("Unsupported OpenGL attribute %d"),
@@ -570,12 +572,7 @@ bool wxGLCanvas::ConvertWXAttrsToQtGL(const int *wxattrs, QGLFormat &format)
 bool
 wxGLCanvasBase::IsDisplaySupported(const int *attribList)
 {
-    QGLFormat format;
-
-    if (!wxGLCanvas::ConvertWXAttrsToQtGL(attribList, format))
-        return false;
-
-    return QGLWidget(format).isValid();
+    return false;
 }
 
 /* static */

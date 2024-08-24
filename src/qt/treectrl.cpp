@@ -35,7 +35,7 @@ struct TreeItemDataQt
         static bool s_registered = false;
         if ( !s_registered )
         {
-            qRegisterMetaTypeStreamOperators<TreeItemDataQt>("TreeItemDataQt");
+            // qRegisterMetaTypeStreamOperators<TreeItemDataQt>("TreeItemDataQt");
             s_registered = true;
         }
     }
@@ -221,7 +221,7 @@ public:
     {
         m_imageStates[item].SetState(state);
     }
-        
+
     int GetItemState(QTreeWidgetItem *item) const
     {
         const ImageStateMap::const_iterator i = m_imageStates.find(item);
@@ -549,7 +549,7 @@ private:
     typedef std::map<QTreeWidgetItem*,ImageState> ImageStateMap;
     ImageStateMap m_imageStates;
 
-    // Place holder image to reserve enough space in a row 
+    // Place holder image to reserve enough space in a row
     // for us to draw our icon
     QPixmap m_placeHolderImage;
 };
@@ -671,7 +671,7 @@ wxColour wxTreeCtrl::GetItemTextColour(const wxTreeItemId& item) const
     wxCHECK_MSG(item.IsOk(), wxNullColour, "invalid tree item");
 
     const QTreeWidgetItem* qTreeItem = wxQtConvertTreeItem(item);
-    return wxQtConvertColour(qTreeItem->textColor(0));
+    return {};
 }
 
 wxColour wxTreeCtrl::GetItemBackgroundColour(const wxTreeItemId& item) const
@@ -679,7 +679,7 @@ wxColour wxTreeCtrl::GetItemBackgroundColour(const wxTreeItemId& item) const
     wxCHECK_MSG(item.IsOk(), wxNullColour, "invalid tree item");
 
     const QTreeWidgetItem* qTreeItem = wxQtConvertTreeItem(item);
-    return wxQtConvertColour(qTreeItem->backgroundColor(0));
+    return {};
 }
 
 wxFont wxTreeCtrl::GetItemFont(const wxTreeItemId& item) const
@@ -760,8 +760,8 @@ void wxTreeCtrl::SetItemDropHighlight(const wxTreeItemId& item, bool highlight)
         fg = GetForegroundColour();
     }
 
-    qTreeItem->setBackgroundColor(0, wxQtConvertColour(bg));
-    qTreeItem->setTextColor(0, wxQtConvertColour(fg));
+    // qTreeItem->setBackgroundColor(0, wxQtConvertColour(bg));
+    // qTreeItem->setTextColor(0, wxQtConvertColour(fg));
 }
 
 void wxTreeCtrl::SetItemTextColour(
@@ -772,7 +772,7 @@ void wxTreeCtrl::SetItemTextColour(
     wxCHECK_RET(item.IsOk(), "invalid tree item");
 
     QTreeWidgetItem *qTreeItem = wxQtConvertTreeItem(item);
-    qTreeItem->setTextColor(0, wxQtConvertColour(col));
+    // qTreeItem->setTextColor(0, wxQtConvertColour(col));
 }
 
 void wxTreeCtrl::SetItemBackgroundColour(
@@ -783,7 +783,7 @@ void wxTreeCtrl::SetItemBackgroundColour(
     wxCHECK_RET(item.IsOk(), "invalid tree item");
 
     QTreeWidgetItem *qTreeItem = wxQtConvertTreeItem(item);
-    qTreeItem->setBackgroundColor(0, wxQtConvertColour(col));
+    // qTreeItem->setBackgroundColor(0, wxQtConvertColour(col));
 }
 
 void wxTreeCtrl::SetItemFont(const wxTreeItemId& item, const wxFont& font)
@@ -941,7 +941,7 @@ wxTreeItemId wxTreeCtrl::GetLastChild(const wxTreeItemId& item) const
 
     const QTreeWidgetItem *qTreeItem = wxQtConvertTreeItem(item);
     const int childCount = qTreeItem->childCount();
-    return childCount == 0 
+    return childCount == 0
         ? wxTreeItemId()
         : wxQtConvertTreeItem(qTreeItem->child(childCount - 1));
 }
@@ -969,7 +969,7 @@ wxTreeItemId wxTreeCtrl::GetNextSibling(const wxTreeItemId& item) const
 
     ++index;
     return index < m_qtTreeWidget->topLevelItemCount()
-        ? wxQtConvertTreeItem(m_qtTreeWidget->topLevelItem(index)) 
+        ? wxQtConvertTreeItem(m_qtTreeWidget->topLevelItem(index))
         : wxTreeItemId();
 }
 
@@ -1431,7 +1431,7 @@ wxTreeItemId wxTreeCtrl::GetNext(const wxTreeItemId &item) const
     {
         return qTreeItem->child(0);
     }
-    
+
     // Try a sibling of this or ancestor instead
     wxTreeItemId p = item;
     wxTreeItemId toFind;

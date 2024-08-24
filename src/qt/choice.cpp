@@ -13,6 +13,7 @@
 
 #include <QtWidgets/QComboBox>
 #include <QtCore/QSortFilterProxyModel>
+#include <qvariant.h>
 
 namespace
 {
@@ -232,7 +233,7 @@ int wxChoice::DoInsertOneItem(const wxString& item, unsigned int pos)
 
 void wxChoice::DoSetItemClientData(unsigned int n, void *clientData)
 {
-    QVariant variant = qVariantFromValue(clientData);
+    QVariant variant = QVariant::fromValue(clientData);
     m_qtComboBox->setItemData(n, variant);
 }
 

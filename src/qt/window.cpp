@@ -17,7 +17,9 @@
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QMenu>
-#include <QtWidgets/QShortcut>
+#include <QShortcut>
+#include <qnamespace.h>
+#include <qvariant.h>
 
 #ifndef WX_PRECOMP
     #include "wx/dcclient.h"
@@ -223,8 +225,8 @@ static const char WINDOW_POINTER_PROPERTY_NAME[] = "wxWindowPointer";
 
 /* static */ void wxWindowQt::QtStoreWindowPointer( QWidget *widget, const wxWindowQt *window )
 {
-    QVariant variant;
-    qVariantSetValue( variant, window );
+    QVariant variant = QVariant::fromValue(window);
+
     widget->setProperty( WINDOW_POINTER_PROPERTY_NAME, variant );
 }
 
@@ -413,8 +415,8 @@ void wxWindowQt::PostCreation(bool generic)
 //
 
     // Set the default color so Paint Event default handler clears the DC:
-    wxWindowBase::SetBackgroundColour(wxColour(GetHandle()->palette().background().color()));
-    wxWindowBase::SetForegroundColour(wxColour(GetHandle()->palette().foreground().color()));
+    wxWindowBase::SetBackgroundColour(wxColour(GetHandle()->palette().base().color()));
+    wxWindowBase::SetForegroundColour(wxColour(GetHandle()->palette().text().color()));
 
     GetHandle()->setFont( wxWindowBase::GetFont().GetHandle() );
 
@@ -614,7 +616,7 @@ void wxWindowQt::DoGetTextExtent(const wxString& string, int *x, int *y, int *de
     QFontMetrics fontMetrics( font != NULL ? font->GetHandle() : GetHandle()->font() );
 
     if ( x != NULL )
-        *x = fontMetrics.width( wxQtConvertString( string ));
+        *x = fontMetrics.boundingRect( wxQtConvertString( string )).width();
 
     if ( y != NULL )
         *y = fontMetrics.height();
@@ -1341,11 +1343,11 @@ bool wxWindowQt::QtHandleResizeEvent ( QWidget *WXUNUSED( handler ), QResizeEven
 bool wxWindowQt::QtHandleWheelEvent ( QWidget *WXUNUSED( handler ), QWheelEvent *event )
 {
     wxMouseEvent e( wxEVT_MOUSEWHEEL );
-    e.SetPosition( wxQtConvertPoint( event->pos() ) );
+    e.SetPosition( wxQtConvertPoint( event->position().toPoint() ) );
     e.SetEventObject(this);
 
-    e.m_wheelAxis = ( event->orientation() == Qt::Vertical ) ? wxMOUSE_WHEEL_VERTICAL : wxMOUSE_WHEEL_HORIZONTAL;
-    e.m_wheelRotation = event->delta();
+    e.m_wheelAxis = ( event->isInverted() ) ? wxMOUSE_WHEEL_VERTICAL : wxMOUSE_WHEEL_HORIZONTAL;
+    e.m_wheelRotation = event->pixelDelta().y();
     e.m_linesPerAction = 3;
     e.m_wheelDelta = 120;
 
@@ -1451,7 +1453,7 @@ bool wxWindowQt::QtHandleMouseEvent ( QWidget *handler, QMouseEvent *event )
                 case Qt::RightButton:
                     wxType = wxEVT_RIGHT_DCLICK;
                     break;
-                case Qt::MidButton:
+                case Qt::MiddleButton:
                     wxType = wxEVT_MIDDLE_DCLICK;
                     break;
                 case Qt::XButton1:
@@ -1475,7 +1477,7 @@ bool wxWindowQt::QtHandleMouseEvent ( QWidget *handler, QMouseEvent *event )
                 case Qt::RightButton:
                     wxType = wxEVT_RIGHT_DOWN;
                     break;
-                case Qt::MidButton:
+                case Qt::MiddleButton:
                     wxType = wxEVT_MIDDLE_DOWN;
                     break;
                 case Qt::XButton1:
@@ -1499,7 +1501,7 @@ bool wxWindowQt::QtHandleMouseEvent ( QWidget *handler, QMouseEvent *event )
                 case Qt::RightButton:
                     wxType = wxEVT_RIGHT_UP;
                     break;
-                case Qt::MidButton:
+                case Qt::MiddleButton:
                     wxType = wxEVT_MIDDLE_UP;
                     break;
                 case Qt::XButton1:

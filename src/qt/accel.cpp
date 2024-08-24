@@ -12,7 +12,7 @@
 #include "wx/list.h"
 #include "wx/qt/private/converter.h"
 #include <QtCore/QVariant>
-#include <QtWidgets/QShortcut>
+#include <QShortcut>
 
 // ----------------------------------------------------------------------------
 // wxAccelList: a list of wxAcceleratorEntries
@@ -59,13 +59,14 @@ wxIMPLEMENT_DYNAMIC_CLASS( wxAcceleratorTable, wxObject );
 
 QShortcut *ConvertAccelerator( wxAcceleratorEntry *e, QWidget *parent )
 {
+    return nullptr;
     // TODO: Not all keys have the same string representation in wx and qt
-    QShortcut *s = new QShortcut( wxQtConvertString( e->ToString() ), parent );
+    // QShortcut *s = new QShortcut(  static_cast<QKeySequence>( wxQtConvertString( e->ToString()) ), parent );
 
-    // Set a property to save wx Command to send when activated
-    s->setProperty( "wxQt_Command", e->GetCommand() );
+    // // Set a property to save wx Command to send when activated
+    // s->setProperty( "wxQt_Command", e->GetCommand() );
 
-    return s;
+    // return s;
 }
 
 wxAcceleratorTable::wxAcceleratorTable()

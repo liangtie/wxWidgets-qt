@@ -11,7 +11,8 @@
 
 class QRegion;
 class QRect;
-template<class T> class QVector;
+template <typename T> class QList;
+template <typename T> using QVector = QList<T>;
 
 class WXDLLIMPEXP_CORE wxRegion : public wxRegionBase
 {

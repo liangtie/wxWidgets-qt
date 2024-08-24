@@ -334,7 +334,7 @@ wxRegionIterator::wxRegionIterator()
 
 wxRegionIterator::wxRegionIterator(const wxRegion& region)
 {
-    m_qtRects = new QVector< QRect >( region.GetHandle().rects() );
+    m_qtRects = new QVector< QRect >{ region.GetHandle().boundingRect() };
     m_pos = 0;
 }
 
@@ -369,7 +369,7 @@ void wxRegionIterator::Reset(const wxRegion& region)
 {
     delete m_qtRects;
 
-    m_qtRects = new QVector< QRect >( region.GetHandle().rects() );
+    m_qtRects = new QVector< QRect >{ region.GetHandle().boundingRect() };
     m_pos = 0;
 }
 

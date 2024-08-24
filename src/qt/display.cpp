@@ -10,9 +10,11 @@
 
 #include "wx/display.h"
 #include "wx/private/display.h"
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QDesktopWidget>
+#include <QScreen>
 #include "wx/qt/private/converter.h"
+#include <QRect>
+#include <QApplication>
+#include <qguiapplication.h>
 
 class wxDisplayImplQt : public wxDisplayImpl
 {
@@ -37,17 +39,17 @@ wxDisplayImplQt::wxDisplayImplQt( unsigned n )
 
 wxRect wxDisplayImplQt::GetGeometry() const
 {
-    return wxQtConvertRect( QApplication::desktop()->screenGeometry( GetIndex() ));
+    return wxQtConvertRect( QApplication::primaryScreen()->geometry());
 }
 
 wxRect wxDisplayImplQt::GetClientArea() const
 {
-    return wxQtConvertRect( QApplication::desktop()->availableGeometry( GetIndex() ));
+    return wxQtConvertRect( QApplication::primaryScreen()->geometry());
 }
 
 int wxDisplayImplQt::GetDepth() const
 {
-    return IsPrimary() ? QApplication::desktop()->depth() : 0;
+    return IsPrimary() ? QApplication::primaryScreen()->depth() : 0;
 }
 
 #if wxUSE_DISPLAY
@@ -58,9 +60,9 @@ wxArrayVideoModes wxDisplayImplQt::GetModes(const wxVideoMode& WXUNUSED(mode)) c
 
 wxVideoMode wxDisplayImplQt::GetCurrentMode() const
 {
-    int width = QApplication::desktop()->width();
-    int height = QApplication::desktop()->height();
-    int depth = QApplication::desktop()->depth();
+    int width = QGuiApplication::primaryScreen()->geometry().width();
+    int height = QGuiApplication::primaryScreen()->geometry().height();
+    int depth = QGuiApplication::primaryScreen()->depth();
 
     return wxVideoMode( width, height, depth );
 }
@@ -91,12 +93,17 @@ wxDisplayImpl *wxDisplayFactoryQt::CreateDisplay(unsigned n)
 
 unsigned wxDisplayFactoryQt::GetCount()
 {
-    return QApplication::desktop()->screenCount();
+    return QApplication::screens().size();
 }
 
 int wxDisplayFactoryQt::GetFromPoint(const wxPoint& pt)
 {
-    return QApplication::desktop()->screenNumber( wxQtConvertPoint( pt ));
+    for(const auto screen : QApplication::screens()){
+        if(screen->geometry().contains( wxQtConvertPoint( pt ))){
+            return QApplication::screens().indexOf( screen );
+        }
+    }
+    return 0;
 }
 
 //##############################################################################

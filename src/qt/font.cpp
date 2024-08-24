@@ -11,6 +11,7 @@
 
 #include <QtGui/QFont>
 #include <QtGui/QFontInfo>
+#include <qfont.h>
 
 #include "wx/font.h"
 #include "wx/fontutil.h"
@@ -536,7 +537,7 @@ void wxNativeFontInfo::SetStyle(wxFontStyle style)
 
 void wxNativeFontInfo::SetNumericWeight(int weight)
 {
-    m_qtFont.setWeight(ConvertFontWeight(weight));
+    m_qtFont.setWeight( static_cast<QFont::Weight>( ConvertFontWeight(weight)));
 }
 
 void wxNativeFontInfo::SetUnderlined(bool underlined)

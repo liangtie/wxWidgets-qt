@@ -15,7 +15,7 @@
 #include "wx/qt/private/converter.h"
 #include "wx/qt/private/winevent.h"
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QMenuBar>
 
 class wxQtAction : public QAction, public wxQtSignalHandler< wxMenuItem >

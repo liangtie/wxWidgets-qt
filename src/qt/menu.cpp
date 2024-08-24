@@ -14,6 +14,7 @@
 #include "wx/stockitem.h"
 
 #include <QtWidgets/QMenu>
+#include <QActionGroup>
 #include <QtWidgets/QMenuBar>
 
 static void ApplyStyle( QMenu *qtMenu, long style )
