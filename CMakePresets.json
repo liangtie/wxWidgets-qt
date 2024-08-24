@@ -46,7 +46,7 @@
             "description": "This preset is var settings for KiCad",
             "hidden": true,
             "cacheVariables": {
-                "wxBUILD_SAMPLES": "OFF",
+                "wxBUILD_SAMPLES": "ALL",
                 "wxUSE_GUI": "ON"
             }
         },

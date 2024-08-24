@@ -126,8 +126,8 @@ int wxQtEventLoopBase::DoRun()
 
 bool wxQtEventLoopBase::Pending() const
 {
-    QAbstractEventDispatcher *instance = QAbstractEventDispatcher::instance();
-    return false;
+    MSG msg;
+    return ::PeekMessage(&msg, 0, 0, 0, PM_NOREMOVE) != 0;
 }
 
 bool wxQtEventLoopBase::Dispatch()
