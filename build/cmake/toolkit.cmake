@@ -19,7 +19,7 @@ if(CMAKE_OSX_SYSROOT MATCHES iphoneos)
 endif()
 
 if(WIN32)
-    set(wxDEFAULT_TOOLKIT qt)
+    set(wxDEFAULT_TOOLKIT msw)
     set(wxTOOLKIT_OPTIONS msw gtk2 gtk3 qt)
     set(wxPLATFORM WIN32)
 elseif(APPLE AND IPHONE)
